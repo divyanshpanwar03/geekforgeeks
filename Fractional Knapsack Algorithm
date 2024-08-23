@@ -1,0 +1,65 @@
+class Item {
+    int weight;
+    int profit;
+
+    public Item(int weight, int profit) {
+        this.weight = weight;
+        this.profit = profit;
+    }
+
+    double ratio() {
+        return (double) profit / weight;
+    }
+}
+public class fractional_knapsack {
+    static double maxValue(Item[] items, int capacity) {
+        double totalProfit = 0;
+        // Sorting items based on the profit-to-weight ratio (in descending order)
+        for (int i = 0; i < items.length - 1; i++) {
+            int maxIndex = i;
+            for (int j = i + 1; j < items.length; j++) {
+                if (items[j].ratio() > items[maxIndex].ratio()) {
+                    maxIndex = j;
+                }
+            }
+            Item temp = items[i];
+            items[i] = items[maxIndex];
+            items[maxIndex] = temp;
+        }
+        System.out.println("The sorted array is- ");
+        System.out.println("Wt:Profit");
+        for(Item item:items){
+            System.out.println(item.weight+" "+item.profit);
+        }
+        // Adding items to the knapsack
+        for (Item item : items) {
+            if (capacity > 0 && item.weight <= capacity) {
+                // If the item can be fully added to the knapsack
+                capacity = capacity - item.weight;
+                totalProfit += item.profit;
+            } else {
+                // If only a fraction of the item can be added
+                double fraction = (double) capacity / item.weight;
+                System.out.println("Fraction-"+capacity+"/"+item.weight);
+                totalProfit += item.profit * fraction;
+                capacity = 0;  // Knapsack is full
+                System.out.println("Added fraction of value "+fraction);
+                break;
+            }
+        }
+        return totalProfit;
+    }
+
+    public static void main(String[] args) {
+        Item[] items = {
+                new Item(10,60 ),
+                new Item(25,100 ),
+                new Item(30,120 ),
+                new Item(10,60 ),
+                new Item(30,100 )
+        };
+        int capacity = 100;
+        double maxProfit = maxValue(items, capacity);
+        System.out.println("Maximum profit in the knapsack: " + maxProfit);
+    }
+}
