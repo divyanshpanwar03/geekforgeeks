@@ -1,0 +1,16 @@
+class Solution {
+    public DLLNode reverseDLL(DLLNode head) {
+        DLLNode prevs=null;
+        DLLNode curr=head;
+        DLLNode forward;
+        while(curr!=null)
+        {
+            forward= curr.next;
+            curr.next=prevs;
+            curr.prev=forward;
+            prevs=curr;
+            curr=forward;
+        }
+        return prevs;
+    }
+}
